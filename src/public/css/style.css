@@ -1,18 +1,21 @@
+/* 共通コンテナ設定 */
 .container {
     max-width: 1512px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
+/* ヘッダー */
 .header {
     background-color: #000;
-    padding: 10px 0;
+    height: 80px;
 }
 
 .header__inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 100%;
 }
 
 .header__logo img {
@@ -34,20 +37,7 @@
     font-size: 16px;
 }
 
-@media screen and (max-width: 850px) {
-    .header__logo img {
-        height: 28px;
-    }
-
-    .nav__item a {
-        font-size: 14px;
-    }
-
-    .header__nav .nav__list {
-        gap: 16px;
-    }
-
-    .container {
-        padding: 0 12px;
-    }
+/* メインコンテンツ共通 */
+main.content {
+    padding-top: 40px;
 }

@@ -1,0 +1,64 @@
+.form-container {
+    width: 680px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+.form-title {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.form-input {
+    width: 100%;
+    height: 45px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.button {
+    width: 100%;
+    height: 60px;
+    background-color: #000;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-link-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-link {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* レスポンシブ対応 */
+@media screen and (max-width: 850px) {
+    .form-container {
+        width: 90%;
+    }
+
+    .form-title {
+        font-size: 28px;
+    }
+}
