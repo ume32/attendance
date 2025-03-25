@@ -6,11 +6,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
+    /**
+     * 認可の設定（今回は誰でもOK）
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * バリデーションルール定義
+     */
     public function rules(): array
     {
         return [
@@ -20,6 +26,10 @@ class RegisterRequest extends FormRequest
             'password_confirmation' => ['required', 'same:password', 'min:8'],
         ];
     }
+
+    /**
+     * 日本語のバリデーションエラーメッセージ
+     */
     public function messages(): array
     {
         return [

@@ -1,0 +1,37 @@
+.verify-container {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.verify-message {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.verify-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.verify-button {
+    padding: 12px 32px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+}
+
+.verify-resend {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 14px;
+    cursor: pointer;
+}

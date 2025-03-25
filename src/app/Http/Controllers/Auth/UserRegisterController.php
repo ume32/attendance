@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class RegisteredUserController extends Controller
+class UserRegisterController extends Controller
 {
     public function create(): View
     {
