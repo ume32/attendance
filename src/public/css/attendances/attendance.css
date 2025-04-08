@@ -1,0 +1,104 @@
+/* 共通の背景・余白 */
+body {
+    background-color: #f4f3f6;
+    margin: 0;
+    font-family: "Helvetica Neue", sans-serif;
+}
+
+/* ページタイトル */
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 48px auto 32px;
+    padding-left: 16px;
+    border-left: 4px solid #000;
+    width: fit-content;
+}
+
+/* フォームボックス（詳細や編集） */
+.attendance-box {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 32px;
+    width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.attendance-box table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-box th,
+.attendance-box td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.attendance-box th {
+    background-color: #fafafa;
+    font-weight: bold;
+    width: 30%;
+}
+
+.attendance-box td input,
+.attendance-box td textarea {
+    width: 80%;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.attendance-box td textarea {
+    height: 60px;
+    resize: none;
+}
+
+/* ボタン */
+.btn {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin: 40px auto 0;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #333;
+}
+
+/* 修正不可メッセージ */
+.attention {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #f00;
+}
+
+/* レスポンシブ */
+@media screen and (max-width: 768px) {
+    .attendance-box {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .attendance-box th,
+    .attendance-box td {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
