@@ -34,3 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/{id}/edit', [UserAttendanceController::class, 'update'])->name('correction.update');
     Route::get('/stamp_correction_request/list', [UserCorrectionRequestController::class, 'index'])->name('correction.list');
 });
+Route::put('/attendance/{id}/note', [UserAttendanceController::class, 'updateNote'])->name('attendance.note.update');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendance/{id}', [UserAttendanceController::class, 'show'])->name('attendance.show');
+    Route::get('/correction/{id}/edit', [UserCorrectionRequestController::class, 'edit'])->name('correction.edit');
+    Route::post('/correction/{id}', [UserCorrectionRequestController::class, 'update'])->name('correction.update');
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/stamp_correction_request/list', [UserCorrectionRequestController::class, 'index'])->name('correction.list');
+});

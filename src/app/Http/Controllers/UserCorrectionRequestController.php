@@ -10,50 +10,44 @@ use Carbon\Carbon;
 
 class UserCorrectionRequestController extends Controller
 {
-    /**
-     * 修正申請一覧画面の表示
-     */
-    public function index()
+    public function index(Request $request)
     {
+        $status = $request->query('status', 'pending'); // デフォルトは「承認待ち」
         $user = Auth::user();
 
-        $pendingRequests = CorrectionRequest::where('user_id', $user->id)
-            ->where('status', '承認待ち')
-            ->with(['user', 'attendance'])
+        $corrections = CorrectionRequest::with(['user', 'attendance'])
+            ->where('user_id', $user->id)
+            ->where('status', $status === 'approved' ? '承認済み' : '承認待ち')
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        $approvedRequests = CorrectionRequest::where('user_id', $user->id)
-            ->where('status', '承認済み')
-            ->with(['user', 'attendance'])
-            ->get();
-
-        return view('correction_request.list', compact('pendingRequests', 'approvedRequests'));
+        return view('corrections.index', compact('corrections'));
     }
 
-    /**
-     * 修正申請フォーム表示
-     */
     public function edit($id)
     {
-        $attendance = Attendance::with(['breaks', 'correctionRequests'])
-            ->where('user_id', Auth::id())
-            ->findOrFail($id);
+        $attendance = Attendance::with('breaks', 'correctionRequests')->findOrFail($id);
 
         return view('correction_request.edit', compact('attendance'));
     }
 
     /**
-     * 修正申請の保存処理
+     * 修正申請の保存
      */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'new_start_time' => ['required', 'date_format:H:i'],
-            'new_end_time' => ['required', 'date_format:H:i', 'after:new_start_time'],
-            'note' => ['required', 'string', 'max:255'],
+            'new_start_time' => 'required|date_format:H:i',
+            'new_end_time' => 'required|date_format:H:i|after:new_start_time',
+            'note' => 'nullable|string|max:255',
         ]);
 
-        $attendance = Attendance::where('user_id', Auth::id())->findOrFail($id);
+        $attendance = Attendance::findOrFail($id);
+
+        // すでに申請中がある場合は2重登録を防ぐ
+        if ($attendance->correctionRequests()->where('status', 0)->exists()) {
+            return redirect()->route('attendance.show', $id)->with('error', 'すでに承認待ちの申請があります。');
+        }
 
         CorrectionRequest::create([
             'user_id' => Auth::id(),
@@ -61,9 +55,9 @@ class UserCorrectionRequestController extends Controller
             'new_start_time' => Carbon::parse($request->new_start_time),
             'new_end_time' => Carbon::parse($request->new_end_time),
             'note' => $request->note,
-            'status' => '承認待ち',
+            'status' => 0, // 承認待ち
         ]);
 
-        return redirect()->route('correction.list')->with('message', '修正申請を送信しました。');
+        return redirect()->route('attendance.show', $id)->with('message', '修正申請を送信しました。');
     }
 }

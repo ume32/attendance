@@ -1,0 +1,51 @@
+.correction-list__wrapper {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 32px;
+    border-left: 5px solid #000;
+    padding-left: 16px;
+}
+
+.tab-menu {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #aaa;
+}
+
+.tab-menu a {
+    margin-right: 24px;
+    text-decoration: none;
+    color: #333;
+    padding-bottom: 8px;
+}
+
+.tab-menu .active {
+    font-weight: bold;
+    border-bottom: 3px solid #000;
+}
+
+.correction-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.correction-table th,
+.correction-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.detail-link {
+    color: #000;
+    text-decoration: underline;
+    font-weight: bold;
+}

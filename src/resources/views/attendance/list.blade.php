@@ -31,7 +31,7 @@
                 <td>{{ \Carbon\Carbon::parse($attendance->date)->format('m/d(D)') }}</td>
                 <td>{{ $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '-' }}</td>
                 <td>{{ $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '-' }}</td>
-                <td>{{ $attendance->break_time ? floor($attendance->break_time / 60) . ':' . str_pad($attendance->break_time % 60, 2, '0', STR_PAD_LEFT) : '-' }}</td>
+                <td>{{ $attendance->break_time }}</td>
                 <td>{{ $attendance->total_time }}</td>
                 <td><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
             </tr>
