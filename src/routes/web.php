@@ -7,6 +7,7 @@ use App\Http\Controllers\UserAttendanceController;
 use App\Http\Controllers\UserCorrectionRequestController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
+use App\Http\Controllers\Admin\AdminStaffController;
 
 /**
  * 一般ユーザー認証不要ルート
@@ -53,6 +54,16 @@ Route::prefix('admin')->group(function () {
 /**
  * 管理者認証後ルート
  */
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.list');
+    Route::get('/attendance/{id}', [AdminAttendanceController::class, 'show'])->name('admin.attendance.show');
+    Route::put('/attendance/{id}/note', [AdminAttendanceController::class, 'update'])->name('admin.attendance.update');
+});
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    Route::get('/staff/list', [AdminStaffController::class, 'index'])->name('admin.staff.list');
+});
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    Route::get('/staff/list', [AdminStaffController::class, 'index'])->name('admin.staff.index');
+    Route::get('/attendance/staff/{id}', [AdminStaffController::class, 'staffAttendance'])
+        ->name('admin.attendance.staff');
 });

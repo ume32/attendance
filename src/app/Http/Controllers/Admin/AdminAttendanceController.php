@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 class AdminAttendanceController extends Controller
 {
+    // 勤怠一覧（/admin/attendance/list）
     public function index(Request $request)
     {
         $date = $request->query('date') ? Carbon::parse($request->query('date')) : Carbon::today();
@@ -18,14 +19,12 @@ class AdminAttendanceController extends Controller
             ->orderBy('user_id')
             ->get()
             ->map(function ($attendance) {
-                // 休憩合計（分）
                 $totalBreakMinutes = $attendance->breaks->sum(function ($break) {
                     return $break->break_start && $break->break_end
                         ? Carbon::parse($break->break_end)->diffInMinutes(Carbon::parse($break->break_start))
                         : 0;
                 });
 
-                // 合計労働時間（分）
                 $workMinutes = 0;
                 if ($attendance->start_time && $attendance->end_time) {
                     $total = Carbon::parse($attendance->end_time)->diffInMinutes(Carbon::parse($attendance->start_time));
@@ -49,5 +48,51 @@ class AdminAttendanceController extends Controller
             'prevDate' => $date->copy()->subDay(),
             'nextDate' => $date->copy()->addDay(),
         ]);
+    }
+
+    // 勤怠詳細（/admin/attendance/{id}）
+    public function show($id)
+    {
+        $attendance = Attendance::with(['user', 'breaks', 'correctionRequests'])->findOrFail($id);
+
+        return view('admin.attendances.show', compact('attendance'));
+    }
+
+    // 勤怠修正（PUT /admin/attendance/{id}/note）
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'note' => 'nullable|string|max:255',
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
+            'breaks.*.start' => 'nullable|date_format:H:i',
+            'breaks.*.end' => 'nullable|date_format:H:i',
+        ]);
+
+        $attendance = Attendance::with('breaks')->findOrFail($id);
+
+        // 出退勤時間
+        if ($request->start_time) {
+            $attendance->start_time = Carbon::parse($attendance->date . ' ' . $request->start_time);
+        }
+        if ($request->end_time) {
+            $attendance->end_time = Carbon::parse($attendance->date . ' ' . $request->end_time);
+        }
+
+        // 備考
+        $attendance->note = $request->note;
+        $attendance->save();
+
+        // 休憩時間の更新（indexが存在するもののみ）
+        foreach ($request->breaks ?? [] as $index => $break) {
+            if (isset($attendance->breaks[$index])) {
+                $attendance->breaks[$index]->update([
+                    'break_start' => Carbon::parse($attendance->date . ' ' . $break['start']),
+                    'break_end' => Carbon::parse($attendance->date . ' ' . $break['end']),
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.attendance.show', $id)->with('message', '勤怠情報を更新しました');
     }
 }
