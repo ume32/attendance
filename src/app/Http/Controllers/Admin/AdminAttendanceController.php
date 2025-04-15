@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use App\Models\CorrectionRequest;
 use Carbon\Carbon;
 
 class AdminAttendanceController extends Controller
@@ -71,7 +72,7 @@ class AdminAttendanceController extends Controller
 
         $attendance = Attendance::with('breaks')->findOrFail($id);
 
-        // 出退勤時間
+        // 出退勤時間更新
         if ($request->start_time) {
             $attendance->start_time = Carbon::parse($attendance->date . ' ' . $request->start_time);
         }
@@ -83,7 +84,7 @@ class AdminAttendanceController extends Controller
         $attendance->note = $request->note;
         $attendance->save();
 
-        // 休憩時間の更新（indexが存在するもののみ）
+        // 休憩時間の更新（既存のみ）
         foreach ($request->breaks ?? [] as $index => $break) {
             if (isset($attendance->breaks[$index])) {
                 $attendance->breaks[$index]->update([
@@ -93,6 +94,17 @@ class AdminAttendanceController extends Controller
             }
         }
 
-        return redirect()->route('admin.attendance.show', $id)->with('message', '勤怠情報を更新しました');
+        // 修正申請として記録（承認状態で登録）
+        $correction = CorrectionRequest::create([
+            'user_id' => $attendance->user_id,
+            'attendance_id' => $attendance->id,
+            'new_start_time' => $request->start_time,
+            'new_end_time' => $request->end_time,
+            'note' => $request->note,
+            'status' => CorrectionRequest::STATUS_APPROVED,
+        ]);
+
+        return redirect()->route('admin.corrections.show', $correction->id)
+            ->with('message', '修正内容を保存しました（即時反映済み）');
     }
 }

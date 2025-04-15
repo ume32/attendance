@@ -57,6 +57,10 @@
                 <p class="wait-message">※ 承認待ちのため修正はできません。</p>
             @endif
         </div>
+
+        @if(session('message'))
+        <p class="success-message">{{ session('message') }}</p>
+        @endif
     </form>
 </div>
 @endsection

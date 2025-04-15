@@ -15,7 +15,7 @@
                     <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
                 </a>
             </div>
-            {{-- 　@auth('admin') --}}
+            @auth('admin')
             <nav class="header__nav">
                 <ul>
                     <li><a href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
@@ -29,7 +29,7 @@
                     </li>
                 </ul>
             </nav>
-            {{-- @endauth --}}
+            @endauth
         </div>
     </header>
 

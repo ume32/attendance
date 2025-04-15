@@ -15,27 +15,22 @@ class CorrectionRequest extends Model
         'status',
     ];
 
-    // ユーザーとのリレーション
+    // ユーザー
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // 勤怠とのリレーション
+    // 勤怠
     public function attendance()
     {
         return $this->belongsTo(Attendance::class);
     }
 
-    /**
-     * ステータスを定数で管理（必要に応じて）
-     */
+    // ステータス定数
     const STATUS_PENDING = '承認待ち';
     const STATUS_APPROVED = '承認済み';
 
-    /**
-     * ステータスの選択肢を取得する（フォーム用など）
-     */
     public static function statusOptions()
     {
         return [

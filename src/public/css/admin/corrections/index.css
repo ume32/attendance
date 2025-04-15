@@ -1,0 +1,56 @@
+.correction-list__wrapper {
+    max-width: 850px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 32px;
+    padding-left: 16px;
+    border-left: 4px solid #000;
+}
+
+.tab-menu {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.tab-menu a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    border-bottom: 2px solid transparent;
+    margin: 0 20px;
+}
+
+.tab-menu a.active {
+    border-color: #000;
+}
+
+.correction-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.correction-table th,
+.correction-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.correction-table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.correction-table tr:last-child td {
+    border-bottom: none;
+}

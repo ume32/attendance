@@ -33,7 +33,7 @@
                 <td>{{ $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '-' }}</td>
                 <td>{{ $attendance->break_time ?? '-' }}</td>
                 <td>{{ $attendance->total_time ?? '-' }}</td>
-                <td><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
+                <td><a href="{{ route('admin.attendance.show', $attendance->id) }}">詳細</a></td>
             </tr>
             @endforeach
         </tbody>
