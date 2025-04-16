@@ -35,7 +35,7 @@
 ####  管理者アカウント
 | メールアドレス         | パスワード     |
 |------------------------|----------------|
-| `admin@example.com`    | `password123`  |
+| `admin@email.com`    | `password123`  |
 
 > 必要に応じて  `AdminSeeder.php` で変更できます。
 
