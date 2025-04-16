@@ -82,6 +82,12 @@
     font-size: 14px;
 }
 
+.approved-label {
+    color: #1a73e8;
+    font-weight: bold;
+    margin-top: 16px;
+}
+
 /* モバイル対応 */
 @media screen and (max-width: 768px) {
     .page-title {

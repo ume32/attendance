@@ -6,16 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CorrectionRequest;
 use App\Models\Attendance;
+use App\Models\BreakModel;
 use Carbon\Carbon;
 
 class AdminCorrectionRequestController extends Controller
 {
-    /**
-     * 申請一覧表示（承認待ち／承認済み）
-     */
     public function index(Request $request)
     {
-        $status = $request->query('status', 'pending'); // デフォルト: 承認待ち
+        $status = $request->query('status', 'pending');
 
         $corrections = CorrectionRequest::with(['user', 'attendance'])
             ->where('status', $status === 'approved' ? '承認済み' : '承認待ち')
@@ -25,46 +23,49 @@ class AdminCorrectionRequestController extends Controller
         return view('admin.corrections.index', compact('corrections', 'status'));
     }
 
-    /**
-     * 申請詳細表示
-     */
     public function show($id)
     {
         $correction = CorrectionRequest::with(['user', 'attendance.breaks'])->findOrFail($id);
-        $attendance = $correction->attendance;
-
-        return view('admin.corrections.show', compact('correction', 'attendance'));
+        return view('admin.corrections.show', compact('correction'));
     }
 
-    /**
-     * 申請承認処理
-     */
     public function approve($id)
     {
-        $correction = CorrectionRequest::with('attendance')->findOrFail($id);
+        $correction = CorrectionRequest::with(['attendance', 'attendance.breaks'])->findOrFail($id);
         $attendance = $correction->attendance;
 
-        // 修正内容を反映
+        // 出退勤
         if ($correction->new_start_time) {
-            $attendance->start_time = Carbon::parse($attendance->date . ' ' . Carbon::parse($correction->new_start_time)->format('H:i'));
+            $attendance->start_time = Carbon::parse($attendance->date . ' ' . $correction->new_start_time);
         }
-
         if ($correction->new_end_time) {
-            $attendance->end_time = Carbon::parse($attendance->date . ' ' . Carbon::parse($correction->new_end_time)->format('H:i'));
+            $attendance->end_time = Carbon::parse($attendance->date . ' ' . $correction->new_end_time);
         }
 
+        // 備考
         if ($correction->note) {
             $attendance->note = $correction->note;
         }
 
-        $attendance->save();
+        // 休憩（new_breaks を JSON で保存している想定）
+        if ($correction->new_breaks) {
+            $newBreaks = json_decode($correction->new_breaks, true);
 
-        // 承認済みに変更
+            foreach ($newBreaks as $index => $break) {
+                if (isset($attendance->breaks[$index])) {
+                    $attendance->breaks[$index]->update([
+                        'break_start' => Carbon::parse($attendance->date . ' ' . $break['start']),
+                        'break_end'   => Carbon::parse($attendance->date . ' ' . $break['end']),
+                    ]);
+                }
+            }
+        }
+
+        $attendance->save();
         $correction->status = '承認済み';
         $correction->save();
 
-        // show ページにリダイレクトして「承認済み」の表示をそのまま出す
         return redirect()->route('admin.corrections.show', $correction->id)
-            ->with('status', '申請を承認しました');
+            ->with('message', '申請を承認しました');
     }
 }

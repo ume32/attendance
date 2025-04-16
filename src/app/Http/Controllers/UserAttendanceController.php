@@ -169,6 +169,13 @@ class UserAttendanceController extends Controller
             'status' => '承認待ち',
         ]);
 
-        return redirect()->route('attendance.show', $id)->with('message', '修正申請を送信しました。');
+        return redirect()->route('attendance.show', $attendance->id)
+            ->with('message', '修正申請を送信しました。')
+            ->with('updated_data', [
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'note' => $request->note,
+                'breaks' => $request->breaks
+            ]);
     }
 }

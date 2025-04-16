@@ -53,5 +53,12 @@
             <button type="submit" class="btn-edit">修正</button>
         </div>
     </form>
+    <script>
+        document.getElementById('edit-form').addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        });
+      </script>
 </div>
 @endsection

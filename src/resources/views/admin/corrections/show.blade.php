@@ -30,13 +30,20 @@
             </td>
         </tr>
 
-        @foreach ($correction->attendance->breaks as $index => $break)
+        @php
+            $breaks = $correction->new_breaks
+                ? json_decode($correction->new_breaks, true)
+                : $correction->attendance->breaks->map(fn($b) => [
+                    'start' => $b->break_start ? \Carbon\Carbon::parse($b->break_start)->format('H:i') : '-',
+                    'end' => $b->break_end ? \Carbon\Carbon::parse($b->break_end)->format('H:i') : '-',
+                ])->toArray();
+        @endphp
+
+        @foreach ($breaks as $index => $break)
         <tr>
             <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
             <td colspan="2">
-                {{ $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '-' }}
-                〜
-                {{ $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '-' }}
+                {{ $break['start'] ?? '-' }} 〜 {{ $break['end'] ?? '-' }}
             </td>
         </tr>
         @endforeach
