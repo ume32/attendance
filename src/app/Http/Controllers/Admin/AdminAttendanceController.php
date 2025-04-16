@@ -94,16 +94,17 @@ class AdminAttendanceController extends Controller
             }
         }
 
-        // 修正申請として記録（承認状態で登録）
+        // 修正申請として「承認済み」で記録
         $correction = CorrectionRequest::create([
             'user_id' => $attendance->user_id,
             'attendance_id' => $attendance->id,
             'new_start_time' => $request->start_time,
             'new_end_time' => $request->end_time,
             'note' => $request->note,
-            'status' => CorrectionRequest::STATUS_APPROVED,
+            'status' => CorrectionRequest::STATUS_PENDING,
         ]);
 
+        // ✅ 修正後の確認画面（admin用：修正詳細表示）に遷移
         return redirect()->route('admin.corrections.show', $correction->id)
             ->with('message', '修正内容を保存しました（即時反映済み）');
     }
