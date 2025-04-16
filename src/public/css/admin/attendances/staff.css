@@ -60,6 +60,24 @@
     text-decoration: underline;
 }
 
+/* ボタン用ラッパー（右下配置） */
+.btn-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+/* CSV出力ボタン */
+.btn-export {
+    padding: 10px 30px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 /* レスポンシブ対応 */
 @media screen and (max-width: 768px) {
     .attendance-list__wrapper {
@@ -80,19 +98,4 @@
         font-size: 12px;
         padding: 8px;
     }
-}
-
-.btn-wrapper {
-    text-align: right;
-    margin-top: 30px;
-}
-
-.btn-export {
-    padding: 10px 30px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
 }

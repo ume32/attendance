@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\CorrectionRequest;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class AdminAttendanceController extends Controller
 {
@@ -107,5 +109,46 @@ class AdminAttendanceController extends Controller
         // ✅ 修正後の確認画面（admin用：修正詳細表示）に遷移
         return redirect()->route('admin.corrections.show', $correction->id)
             ->with('message', '修正内容を保存しました（即時反映済み）');
+    }
+
+    public function export($id, Request $request)
+    {
+        $month = $request->query('month', Carbon::now()->format('Y-m'));
+        $startOfMonth = Carbon::parse($month)->startOfMonth();
+        $endOfMonth = Carbon::parse($month)->endOfMonth();
+
+        $attendances = Attendance::with('breaks')
+            ->where('user_id', $id)
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->orderBy('date')
+            ->get();
+
+        $csvHeader = ['日付', '出勤', '退勤', '休憩', '合計'];
+
+        $response = new StreamedResponse(function () use ($attendances, $csvHeader) {
+            $handle = fopen('php://output', 'w');
+            // UTF-8 BOM（Excelで文字化け防止）
+            fputs($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            fputcsv($handle, $csvHeader);
+
+            foreach ($attendances as $attendance) {
+                $row = [
+                    Carbon::parse($attendance->date)->format('Y/m/d'),
+                    optional($attendance->start_time)->format('H:i'),
+                    optional($attendance->end_time)->format('H:i'),
+                    $attendance->break_time ?? '-',
+                    $attendance->total_time ?? '-',
+                ];
+                fputcsv($handle, $row);
+            }
+
+            fclose($handle);
+        });
+
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="attendance.csv"');
+
+        return $response;
     }
 }

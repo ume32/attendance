@@ -20,9 +20,13 @@
         <tr>
             <th>出勤・退勤</th>
             <td colspan="2">
-                {{ $correction->new_start_time ?? ($correction->attendance->start_time ? \Carbon\Carbon::parse($correction->attendance->start_time)->format('H:i') : '-') }}
+                {{ $correction->new_start_time
+                    ? \Carbon\Carbon::parse($correction->new_start_time)->format('H:i')
+                    : ($correction->attendance->start_time ? \Carbon\Carbon::parse($correction->attendance->start_time)->format('H:i') : '-') }}
                 〜
-                {{ $correction->new_end_time ?? ($correction->attendance->end_time ? \Carbon\Carbon::parse($correction->attendance->end_time)->format('H:i') : '-') }}
+                {{ $correction->new_end_time
+                    ? \Carbon\Carbon::parse($correction->new_end_time)->format('H:i')
+                    : ($correction->attendance->end_time ? \Carbon\Carbon::parse($correction->attendance->end_time)->format('H:i') : '-') }}
             </td>
         </tr>
 

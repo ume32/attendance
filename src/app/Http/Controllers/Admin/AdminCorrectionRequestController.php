@@ -42,18 +42,29 @@ class AdminCorrectionRequestController extends Controller
     public function approve($id)
     {
         $correction = CorrectionRequest::with('attendance')->findOrFail($id);
-
-        // 勤怠情報に修正内容を反映
         $attendance = $correction->attendance;
-        $attendance->start_time = $correction->new_start_time ?? $attendance->start_time;
-        $attendance->end_time   = $correction->new_end_time ?? $attendance->end_time;
-        $attendance->note       = $correction->note ?? $attendance->note;
+
+        // 修正内容を反映
+        if ($correction->new_start_time) {
+            $attendance->start_time = Carbon::parse($attendance->date . ' ' . Carbon::parse($correction->new_start_time)->format('H:i'));
+        }
+
+        if ($correction->new_end_time) {
+            $attendance->end_time = Carbon::parse($attendance->date . ' ' . Carbon::parse($correction->new_end_time)->format('H:i'));
+        }
+
+        if ($correction->note) {
+            $attendance->note = $correction->note;
+        }
+
         $attendance->save();
 
-        // 修正申請を「承認済み」に更新
+        // 承認済みに変更
         $correction->status = '承認済み';
         $correction->save();
 
-        return redirect()->route('admin.corrections.index')->with('status', '申請を承認しました');
+        // show ページにリダイレクトして「承認済み」の表示をそのまま出す
+        return redirect()->route('admin.corrections.show', $correction->id)
+            ->with('status', '申請を承認しました');
     }
 }

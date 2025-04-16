@@ -10,11 +10,10 @@ use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Admin\AdminStaffController;
 use App\Http\Controllers\Admin\AdminCorrectionRequestController;
 
-/**
-|--------------------------------------------------------------------------
-| 一般ユーザー：認証不要ルート
-|--------------------------------------------------------------------------
- */
+Route::get('/', function () {
+    return redirect('/login');
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('/register', [UserRegisterController::class, 'create'])->name('register');
     Route::post('/register', [UserRegisterController::class, 'store']);
@@ -84,3 +83,4 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     // ログアウト
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });
+Route::get('/admin/attendance/staff/{id}/export', [AdminAttendanceController::class, 'export'])->name('admin.attendance.export');

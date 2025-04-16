@@ -8,7 +8,7 @@
 <div class="attendance-detail__wrapper">
     <h2 class="page-title">勤怠詳細</h2>
 
-    <form method="POST" action="{{ route('attendance.note.update', $attendance->id) }}">
+    <form method="POST" action="{{ route('admin.attendance.update', $attendance->id) }}">
         @csrf
         @method('PUT')
 

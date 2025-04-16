@@ -40,7 +40,9 @@
     </table>
 
     <div class="btn-wrapper">
-        <button class="btn-export">CSV出力</button>
+        <form method="GET" action="{{ route('admin.attendance.export', $user->id) }}">
+            <button type="submit" class="btn-export">CSV出力</button>
+        </form>
     </div>
 </div>
 @endsection
