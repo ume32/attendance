@@ -8,33 +8,33 @@
     @yield('css')
 </head>
 <body>
-    <header class="header">
-        <div class="header__inner">
-            <div class="header__left">
-                <a href="/admin/attendance/list" class="header__logo">
-                    <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
-                </a>
-            </div>
-            @auth('admin')
-            <nav class="header__nav">
-                <ul>
-                    <li><a href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
-                    <li><a href="{{ url('/admin/staff/list') }}">スタッフ一覧</a></li>
-                    <li><a href="{{ url('/admin/stamp_correction_request/list') }}">申請一覧</a></li>
-                    <li>
-                        <form method="POST" action="{{ route('admin.logout') }}">
-                            @csrf
-                            <button type="submit">ログアウト</button>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
-            @endauth
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/admin/attendance/list" class="header__logo">
+                <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
+            </a>
         </div>
-    </header>
+        @auth('admin')
+        <nav class="header__nav">
+            <ul>
+                <li><a href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+                <li><a href="{{ url('/admin/staff/list') }}">スタッフ一覧</a></li>
+                <li><a href="{{ url('/admin/stamp_correction_request/list') }}">申請一覧</a></li>
+                <li>
+                    <form method="POST" action="{{ route('admin.logout') }}">
+                        @csrf
+                        <button type="submit">ログアウト</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        @endauth
+    </div>
+</header>
 
-    <main class="main">
-        @yield('content')
-    </main>
+<main class="main">
+    @yield('content')
+</main>
 </body>
 </html>

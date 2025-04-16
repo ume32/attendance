@@ -8,12 +8,12 @@
     @yield('css')
 </head>
 <body>
-    <header class="header">
-        <div class="header__inner">
-            <div class="header__left">
-                <a href="/" class="header__logo">
-                    <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
-                </a>
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="header__logo">
+                <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
+            </a>
         </div>
         @auth
         <nav class="header__nav">

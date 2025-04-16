@@ -40,12 +40,10 @@
         @endphp
 
         @foreach ($breaks as $index => $break)
-        <tr>
-            <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
-            <td colspan="2">
-                {{ $break['start'] ?? '-' }} 〜 {{ $break['end'] ?? '-' }}
-            </td>
-        </tr>
+            <tr>
+                <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
+                <td colspan="2">{{ $break['start'] ?? '-' }} 〜 {{ $break['end'] ?? '-' }}</td>
+            </tr>
         @endforeach
 
         <tr>

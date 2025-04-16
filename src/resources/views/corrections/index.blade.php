@@ -25,17 +25,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($corrections as $correction)
-            <tr>
-                <td>{{ $correction->status }}</td>
-                <td>{{ $correction->user->name }}</td>
-                <td>{{ \Carbon\Carbon::parse($correction->attendance->date)->format('Y/m/d') }}</td>
-                <td>{{ $correction->note ?? '-' }}</td>
-                <td>{{ \Carbon\Carbon::parse($correction->created_at)->format('Y/m/d') }}</td>
-                <td>
-                    <a href="{{ route('attendance.show', $correction->attendance->id) }}" class="detail-link">詳細</a>
-                </td>
-            </tr>
+            @foreach ($corrections as $correction)
+                <tr>
+                    <td>{{ $correction->status }}</td>
+                    <td>{{ $correction->user->name }}</td>
+                    <td>{{ \Carbon\Carbon::parse($correction->attendance->date)->format('Y/m/d') }}</td>
+                    <td>{{ $correction->note ?? '-' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($correction->created_at)->format('Y/m/d') }}</td>
+                    <td><a href="{{ route('attendance.show', $correction->attendance->id) }}" class="detail-link">詳細</a></td>
+                </tr>
             @endforeach
         </tbody>
     </table>

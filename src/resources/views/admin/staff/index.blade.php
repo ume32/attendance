@@ -18,11 +18,11 @@
         </thead>
         <tbody>
             @foreach ($users as $user)
-            <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td><a href="{{ url('/admin/attendance/staff/' . $user->id) }}">詳細</a></td>
-            </tr>
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td><a href="{{ route('admin.attendance.staff', $user->id) }}">詳細</a></td>
+                </tr>
             @endforeach
         </tbody>
     </table>

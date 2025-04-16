@@ -27,14 +27,14 @@
         </thead>
         <tbody>
             @foreach ($attendances as $attendance)
-            <tr>
-                <td>{{ \Carbon\Carbon::parse($attendance->date)->format('m/d(D)') }}</td>
-                <td>{{ $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '-' }}</td>
-                <td>{{ $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '-' }}</td>
-                <td>{{ $attendance->break_time }}</td>
-                <td>{{ $attendance->total_time }}</td>
-                <td><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
-            </tr>
+                <tr>
+                    <td>{{ \Carbon\Carbon::parse($attendance->date)->format('m/d(D)') }}</td>
+                    <td>{{ $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '-' }}</td>
+                    <td>{{ $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '-' }}</td>
+                    <td>{{ $attendance->break_time }}</td>
+                    <td>{{ $attendance->total_time }}</td>
+                    <td><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
+                </tr>
             @endforeach
         </tbody>
     </table>

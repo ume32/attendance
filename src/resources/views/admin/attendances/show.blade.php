@@ -31,14 +31,14 @@
             </tr>
 
             @foreach ($attendance->breaks as $index => $break)
-            <tr>
-                <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
-                <td colspan="2">
-                    <input type="time" name="breaks[{{ $index }}][start]" value="{{ \Carbon\Carbon::parse($break->break_start)->format('H:i') }}" class="time-input">
-                    <span class="time-separator">〜</span>
-                    <input type="time" name="breaks[{{ $index }}][end]" value="{{ \Carbon\Carbon::parse($break->break_end)->format('H:i') }}" class="time-input">
-                </td>
-            </tr>
+                <tr>
+                    <th>{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</th>
+                    <td colspan="2">
+                        <input type="time" name="breaks[{{ $index }}][start]" value="{{ \Carbon\Carbon::parse($break->break_start)->format('H:i') }}" class="time-input">
+                        <span class="time-separator">〜</span>
+                        <input type="time" name="breaks[{{ $index }}][end]" value="{{ \Carbon\Carbon::parse($break->break_end)->format('H:i') }}" class="time-input">
+                    </td>
+                </tr>
             @endforeach
 
             <tr>
@@ -53,12 +53,11 @@
             <button type="submit" class="btn-edit">修正</button>
         </div>
     </form>
+
     <script>
-        document.getElementById('edit-form').addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-          }
+        document.getElementById('edit-form')?.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') e.preventDefault();
         });
-      </script>
+    </script>
 </div>
 @endsection

@@ -21,14 +21,15 @@ class UserAttendanceController extends Controller
             ->whereDate('date', $today)
             ->first();
 
-        if (!$attendance) {
-            $status = '勤務外';
-        } elseif ($attendance->end_time) {
-            $status = '勤務外';
-        } elseif ($attendance->breaks->last() && !$attendance->breaks->last()->break_end) {
-            $status = '休憩中';
-        } else {
-            $status = '出勤中';
+        $status = '勤務外';
+        if ($attendance) {
+            if ($attendance->end_time) {
+                $status = '勤務外';
+            } elseif ($attendance->breaks->last() && !$attendance->breaks->last()->break_end) {
+                $status = '休憩中';
+            } else {
+                $status = '出勤中';
+            }
         }
 
         return view('attendance.index', [
@@ -47,31 +48,31 @@ class UserAttendanceController extends Controller
     public function list(Request $request)
     {
         $user = Auth::user();
-
-        $month = $request->query('month');
-        $targetDate = $month ? Carbon::parse($month . '-01') : Carbon::now();
+        $targetDate = $request->query('month')
+            ? Carbon::parse($request->query('month') . '-01')
+            : Carbon::now();
 
         $attendances = Attendance::with('breaks')
             ->where('user_id', $user->id)
             ->whereMonth('date', $targetDate->month)
             ->whereYear('date', $targetDate->year)
-            ->orderBy('date', 'asc')
+            ->orderBy('date')
             ->get()
             ->map(function ($attendance) {
-                $totalBreakMinutes = $attendance->breaks->sum(function ($break) {
+                $totalBreak = $attendance->breaks->sum(function ($break) {
                     return $break->break_end && $break->break_start
-                        ? Carbon::parse($break->break_end)->diffInMinutes(Carbon::parse($break->break_start))
+                        ? Carbon::parse($break->break_end)->diffInMinutes($break->break_start)
                         : 0;
                 });
 
                 $workMinutes = 0;
                 if ($attendance->start_time && $attendance->end_time) {
-                    $totalMinutes = Carbon::parse($attendance->end_time)->diffInMinutes(Carbon::parse($attendance->start_time));
-                    $workMinutes = $totalMinutes - $totalBreakMinutes;
+                    $total = Carbon::parse($attendance->end_time)->diffInMinutes($attendance->start_time);
+                    $workMinutes = $total - $totalBreak;
                 }
 
-                $attendance->break_time = $totalBreakMinutes > 0
-                    ? floor($totalBreakMinutes / 60) . ':' . str_pad($totalBreakMinutes % 60, 2, '0', STR_PAD_LEFT)
+                $attendance->break_time = $totalBreak > 0
+                    ? floor($totalBreak / 60) . ':' . str_pad($totalBreak % 60, 2, '0', STR_PAD_LEFT)
                     : '-';
 
                 $attendance->total_time = $workMinutes > 0
@@ -91,12 +92,10 @@ class UserAttendanceController extends Controller
 
     public function start()
     {
-        Attendance::firstOrCreate([
-            'user_id' => Auth::id(),
-            'date' => Carbon::today()
-        ], [
-            'start_time' => Carbon::now(),
-        ]);
+        Attendance::firstOrCreate(
+            ['user_id' => Auth::id(), 'date' => Carbon::today()],
+            ['start_time' => Carbon::now()]
+        );
 
         return redirect()->route('attendance.index');
     }
@@ -108,9 +107,7 @@ class UserAttendanceController extends Controller
             ->first();
 
         if ($attendance) {
-            $attendance->breaks()->create([
-                'break_start' => Carbon::now(),
-            ]);
+            $attendance->breaks()->create(['break_start' => Carbon::now()]);
         }
 
         return redirect()->route('attendance.index');
@@ -124,9 +121,7 @@ class UserAttendanceController extends Controller
             ->first();
 
         if ($attendance && $attendance->breaks->last() && !$attendance->breaks->last()->break_end) {
-            $attendance->breaks->last()->update([
-                'break_end' => Carbon::now(),
-            ]);
+            $attendance->breaks->last()->update(['break_end' => Carbon::now()]);
         }
 
         return redirect()->route('attendance.index');
@@ -139,9 +134,7 @@ class UserAttendanceController extends Controller
             ->first();
 
         if ($attendance && !$attendance->end_time) {
-            $attendance->update([
-                'end_time' => Carbon::now(),
-            ]);
+            $attendance->update(['end_time' => Carbon::now()]);
         }
 
         return redirect()->route('attendance.index');
@@ -159,7 +152,6 @@ class UserAttendanceController extends Controller
 
         $attendance = Attendance::with('breaks')->findOrFail($id);
 
-        // 修正申請として保存
         CorrectionRequest::create([
             'user_id' => Auth::id(),
             'attendance_id' => $attendance->id,
@@ -167,15 +159,17 @@ class UserAttendanceController extends Controller
             'new_end_time' => $request->end_time,
             'note' => $request->note,
             'status' => '承認待ち',
+            'new_breaks' => json_encode($request->breaks),
+        ]);
+
+        session()->flash('updated_data', [
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'note' => $request->note,
+            'breaks' => $request->breaks,
         ]);
 
         return redirect()->route('attendance.show', $attendance->id)
-            ->with('message', '修正申請を送信しました。')
-            ->with('updated_data', [
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time,
-                'note' => $request->note,
-                'breaks' => $request->breaks
-            ]);
+            ->with('message', '修正申請を送信しました。');
     }
 }

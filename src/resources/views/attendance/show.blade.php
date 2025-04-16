@@ -32,11 +32,11 @@
                 <td colspan="2">
                     <input type="time" name="start_time"
                         value="{{ $updated['start_time'] ?? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}"
-                        class="time-input" @if($isPending) disabled @endif>
+                        class="time-input" @if($isPending) readonly @endif>
                     <span class="time-separator">〜</span>
                     <input type="time" name="end_time"
                         value="{{ $updated['end_time'] ?? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}"
-                        class="time-input" @if($isPending) disabled @endif>
+                        class="time-input" @if($isPending) readonly @endif>
                 </td>
             </tr>
 
@@ -49,11 +49,11 @@
                     <td colspan="2">
                         <input type="time" name="breaks[{{ $index }}][start]"
                             value="{{ $breakUpdated['start'] ?? \Carbon\Carbon::parse($break->break_start)->format('H:i') }}"
-                            class="time-input" @if($isPending) disabled @endif>
+                            class="time-input" @if($isPending) readonly @endif>
                         <span class="time-separator">〜</span>
                         <input type="time" name="breaks[{{ $index }}][end]"
                             value="{{ $breakUpdated['end'] ?? \Carbon\Carbon::parse($break->break_end)->format('H:i') }}"
-                            class="time-input" @if($isPending) disabled @endif>
+                            class="time-input" @if($isPending) readonly @endif>
                     </td>
                 </tr>
             @endforeach
@@ -61,7 +61,7 @@
             <tr>
                 <th>備考</th>
                 <td colspan="2">
-                    <textarea name="note" class="note-textarea" @if($isPending) disabled @endif>{{ $updated['note'] ?? $attendance->note }}</textarea>
+                    <textarea name="note" class="note-textarea" @if($isPending) readonly @endif>{{ $updated['note'] ?? $attendance->note }}</textarea>
                 </td>
             </tr>
         </table>

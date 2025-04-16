@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class AddNoteToAttendancesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::table('attendances', function (Blueprint $table) {

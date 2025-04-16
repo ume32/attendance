@@ -6,23 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 class ModifyNoteNullableInCorrectionRequestsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::table('correction_requests', function (Blueprint $table) {
-            $table->string('note')->nullable()->change(); // noteカラムをNULL許容に変更
+            $table->string('note')->nullable()->change();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('correction_requests', function (Blueprint $table) {
-            $table->string('note')->nullable(false)->change(); // rollback時にNULLを不可に戻す
+            $table->string('note')->nullable(false)->change();
         });
     }
 }

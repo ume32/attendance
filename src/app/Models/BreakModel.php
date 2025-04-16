@@ -19,4 +19,3 @@ class BreakModel extends Model
         return $this->belongsTo(Attendance::class);
     }
 }
-

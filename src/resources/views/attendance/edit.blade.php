@@ -23,9 +23,7 @@
     <div class="form-group">
         <label>休憩時間（分）</label>
         <input type="number" name="break_minutes" value="{{ old('break_minutes', $attendance->breaks->sum(function($break) {
-            return $break->break_end && $break->break_start
-                ? $break->break_end->diffInMinutes($break->break_start)
-                : 0;
+            return $break->break_end && $break->break_start ? $break->break_end->diffInMinutes($break->break_start) : 0;
         })) }}">
     </div>
 
